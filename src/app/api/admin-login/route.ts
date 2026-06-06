@@ -5,6 +5,11 @@ export async function POST(req: Request) {
   try {
     const { email, password } = await req.json();
 
+    console.log(`[Login] Attempt for email: ${email}`);
+    console.log(`[Login] Env User: ${process.env.ADMIN_USER}`);
+    console.log(`[Login] Env Pass length: ${process.env.ADMIN_PASS?.length}`);
+    console.log(`[Login] Provided Pass length: ${password?.length}`);
+
     if (
       email === process.env.ADMIN_USER &&
       password === process.env.ADMIN_PASS
@@ -33,6 +38,7 @@ export async function POST(req: Request) {
       return response;
     }
 
+    console.log(`[Login] Credential mismatch for ${email}`);
     return new NextResponse("Invalid credentials", { status: 401 });
 
   } catch (err) {
