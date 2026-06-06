@@ -1,0 +1,113 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+// Looking for ways to speed up your queries, or scale easily with your serverless or edge functions?
+// Try Prisma Accelerate: https://pris.ly/cli/accelerate-init
+
+generator client {
+  provider = "prisma-client"
+  output   = "../generated/prisma"
+}
+
+datasource db {
+  provider = "postgresql"
+}
+
+model SkillCategory {
+  id     Int     @id @default(autoincrement())
+  name   String
+  skills Skill[]
+}
+
+model Skill {
+  id         Int           @id @default(autoincrement())
+  name       String
+  level      Int? // 1–100 for progress bar
+  categoryId Int
+  category   SkillCategory @relation(fields: [categoryId], references: [id])
+
+  isLearning Boolean @default(false) // mark skills under “Currently Learning”
+}
+
+model Project {
+  id          Int      @id @default(autoincrement())
+  title       String
+  description String
+  techStack   String[] // ["Next.js", "TypeScript", "Node", ...]
+  github      String?
+  liveUrl     String?
+  image       String?
+  visible     Boolean  @default(true)
+  createdAt   DateTime @default(now())
+}
+
+model Certification {
+  id            Int      @id @default(autoincrement())
+  title         String
+  issuer        String
+  issueDate     DateTime
+  credentialId  String?
+  credentialUrl String?
+}
+
+model Achievement {
+  id     Int       @id @default(autoincrement())
+  title  String
+  detail String?
+  date   DateTime?
+}
+
+model Experience {
+  id          Int       @id @default(autoincrement())
+  role        String
+  company     String
+  startDate   DateTime
+  endDate     DateTime? // null = currently working
+  description String?
+  techUsed    String[]
+}
+
+model Blog {
+  id         Int      @id @default(autoincrement())
+  title      String
+  slug       String   @unique
+  content    String
+  coverImage String?
+  published  Boolean  @default(false)
+  createdAt  DateTime @default(now())
+  updatedAt  DateTime @updatedAt
+}
+
+model ContactMessage {
+  id      Int      @id @default(autoincrement())
+  name    String
+  email   String
+  message String
+  sentAt  DateTime @default(now())
+}
+
+model HeroSection {
+  id          Int     @id @default(autoincrement())
+  headline    String // main line
+  subheadline String? // supporting line
+
+  primaryBtnText String?
+  primaryBtnLink String?
+
+  secondaryBtnText String?
+  secondaryBtnLink String?
+
+  imageUrl  String? // optional hero image
+  updatedAt DateTime @updatedAt
+}
+
+model AboutSection {
+  id          Int      @id @default(autoincrement())
+  shortIntro  String // 1–2 lines
+  description String // full paragraph
+  highlights  String[] // ["Full-stack", "MERN", "TypeScript"]
+  imageUrl    String? // optional profile/portrait
+  btnText     String?
+  btnLink     String?
+  updatedAt   DateTime @updatedAt
+}
